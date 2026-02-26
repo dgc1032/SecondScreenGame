@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+button {
+    width: 100px;
+    height: 100px;
+    font-size: 24px;
+    margin: 10px;
+}
+</style>
+</head>
+<body>
+<h2>Controller</h2>
+
+<button onclick="sendMove('up')">⬆</button><br>
+<button onclick="sendMove('left')">⬅</button>
+<button onclick="sendMove('right')">➡</button><br>
+<button onclick="sendMove('down')">⬇</button>
+
+<script>
+let playerID = null;
+
+async function joinGame() {
+    const response = await fetch('/join');
+    if(response.status === 200){
+        const data = await response.json();
+        playerID = data.playerID;
+        console.log("Assigned player ID:", playerID);
+    } else {
+        alert("Game is full!");
+    }
+}
+
+// Send move to server
+function sendMove(direction) {
+    if(playerID === null) return;
+    fetch(`/move?player=${playerID}&dir=${direction}`);
+}
+
+// Call joinGame immediately when page loads
+joinGame();
+</script>
+</body>
+</html>
